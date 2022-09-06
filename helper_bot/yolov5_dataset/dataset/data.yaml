@@ -1,0 +1,5 @@
+train: C:\hj\doozoo\train\images
+val: C:\hj\doozoo\valid\images
+
+nc: 2
+names: ['fall', 'normal']
