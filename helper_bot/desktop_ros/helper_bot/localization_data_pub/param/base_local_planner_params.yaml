@@ -1,4 +1,4 @@
-controller_frequency: 15
+controller_frequency: 14 # 15
 
 TrajectoryPlannerROS:
   max_vel_x: 0.12

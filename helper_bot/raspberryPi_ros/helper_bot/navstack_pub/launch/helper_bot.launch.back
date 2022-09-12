@@ -37,7 +37,6 @@
   <!-- Publish: /odom_data_euler, /odom_data_quat -->
   <node pkg="localization_data_pub" type="ekf_odom_pub" name="ekf_odom_pub">
   </node> 
-	
 
   <arg name="AD0"       default="false"/>
   <arg name="PublishTF"       default="true"/>
@@ -123,8 +122,16 @@
 <!--    <param name="angle_compensate"    type="bool"   value="true"/>-->
 <!--  </node>  -->
 
-  <node name="LD06" pkg="ldlidar_sbc" type="ldlidar" output="screen" respawn="true"/>
-    <param name="serial_port"         type="string" value="/dev/ttyS0"/>
+
+
+   <node name="ld06_lidar" pkg="ld06_lidar" type="ld06_lidar" args="LD06" output="screen" >
+       <param name="serial_port" value="/dev/ttyS0"/>
+       <param name="lidar_frame" value="laser"/>
+       <remap from="/LiDAR/LD06" to="scan"/>
+   </node>
+
+  <!--<node name="LD06" pkg="ldlidar_sbc" type="ldlidar" output="screen" respawn="true"/>
+    <param name="serial_port"         type="string" value="/dev/ttyS0"/>-->
 <!--    <param name="frame_id"            type="string" value="laser"/> -->
 
 

@@ -81,16 +81,18 @@ const double TICKS_PER_METER = 4900; // Originally 2880
 const int K_P = 278;
  
 // Y-intercept for the PWM-Linear Velocity relationship for the robot
-const int b = 52;
- 
+const int b = 30;// 52;
+
+const int ttime = 900;
+
 // Correction multiplier for drift. Chosen through experimentation.
 const int DRIFT_MULTIPLIER = 120;
  
 // Turning PWM output (0 = min, 255 = max for PWM values)
-const int PWM_TURN = 80; // 80
+const int PWM_TURN = 55; // 80
  
 // Set maximum and minimum limits for the PWM values
-const int PWM_MIN = 80; // about 0.1 m/s // 80
+const int PWM_MIN = 55; // about 0.1 m/s // 80
 const int PWM_MAX = 100; // about 0.172 m/s
  
 // Set linear velocity and PWM variable values for each wheel
@@ -188,13 +190,13 @@ void calc_vel_left_wheel(){
   }
  
   // Calculate wheel velocity in meters per second
-  velLeftWheel = numOfTicks/TICKS_PER_METER/((millis()/1000)-prevTime);
+  velLeftWheel = numOfTicks/TICKS_PER_METER/((millis()/ttime)-prevTime);
  
   // Keep track of the previous tick count
   prevLeftCount = left_wheel_tick_count.data;
  
   // Update the timestamp
-  prevTime = (millis()/1000);
+  prevTime = (millis()/ttime);
  
 }
  
@@ -216,11 +218,11 @@ void calc_vel_right_wheel(){
   }
  
   // Calculate wheel velocity in meters per second
-  velRightWheel = numOfTicks/TICKS_PER_METER/((millis()/1000)-prevTime);
+  velRightWheel = numOfTicks/TICKS_PER_METER/((millis()/ttime)-prevTime);
  
   prevRightCount = right_wheel_tick_count.data;
    
-  prevTime = (millis()/1000);
+  prevTime = (millis()/ttime);
  
 }
  
@@ -228,7 +230,7 @@ void calc_vel_right_wheel(){
 void calc_pwm_values(const geometry_msgs::Twist& cmdVel) {
    
   // Record timestamp of last velocity command received
-  lastCmdVelReceived = (millis()/1000);
+  lastCmdVelReceived = (millis()/ttime);
    
   // Calculate the PWM value given the desired velocity 
   pwmLeftReq = K_P * cmdVel.linear.x + b;
@@ -427,7 +429,7 @@ void loop() {
   }
    
   // Stop the car if there are no cmd_vel messages
-  if((millis()/1000) - lastCmdVelReceived > 1) {
+  if((millis()/ttime) - lastCmdVelReceived > 1) {
     pwmLeftReq = 0;
     pwmRightReq = 0;
   }

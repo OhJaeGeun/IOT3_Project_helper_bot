@@ -37,7 +37,7 @@
   <!-- Publish: /odom_data_euler, /odom_data_quat -->
   <node pkg="localization_data_pub" type="ekf_odom_pub" name="ekf_odom_pub">
   </node> 
-
+<!--
   <arg name="AD0"       default="false"/>
   <arg name="PublishTF"       default="true"/>
   <arg name="UseCalibration"       default="true"/>
@@ -46,16 +46,16 @@
   <arg name="FilterGain"       default="0.031"/>
   <arg name="AccelerationScale"       default="0"/>
   <arg name="GyroScale"       default="0"/>
-  <!--<arg name="Hz"       default="60"/>-->
-  <arg name="Hz"       default="30"/>
+  <arg name="Hz"       default="60"/>
   <arg name="ParentsframeID"       default="base_link"/>
-  <arg name="FrameID"       default="imu_link"/>
-
+  <arg name="FrameID"       default="IMU_FRAME"/>
+-->
   <!-- IMU Data Publisher Using the BNO055 IMU Sensor -->
   <!-- Publish: /imu/data -->
 <!--  <node ns="imu" name="imu_node" pkg="imu_bno055" type="bno055_i2c_node" respawn="true" respawn_delay="2"> -->
   <!--<node ns="imu" name="mpu6050_node" pkg="mpu6050" type="mpu6050_node" respawn="true" respawn_delay="2" output="screen">--> <!-- output="screen", ns="imu" -->
-  <node pkg="mpu6050" type="mpu6050_node" name="mpu6050_node" respawn="true" output="screen">
+	  <!--<node pkg="mpu6050" type="mpu6050_node" name="mpu6050_node" respawn="true" output="screen">-->
+<!--
     <param name="AD0" type="bool" value="$(arg AD0)" />
     <param name="PublishTF" type="bool" value="$(arg PublishTF)" />
     <param name="UseCalibration" type="bool" value="$(arg UseCalibration)" />
@@ -66,12 +66,28 @@
     <param name="GyroScale" type="int" value="$(arg GyroScale)" />
     <param name="Hz" type="int" value="$(arg Hz)" />
     <param name="ParentsframeID" type="string" value="$(arg ParentsframeID)" />
-    <param name="FrameID" type="string" value="$(arg FrameID)" />
+    <param name="FrameID" type="string" value="$(arg FrameID)" />-->
     <!--<param name="device" type="string" value="/dev/i2c-1"/>-->
-    <!--    <param name="address" type="int" value="104"/> --> <!-- 0x28 == 40 is the default for BNO055 -->
+    <!--    <param name="address" type="int" value="104"/> --> <!-- 0x28 == 40 is the default for bno055 -->
     <!--    <param name="frame_id" type="string" value="imu_link"/>-->
+    <!--</node>-->
+
+  <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" >
   </node>
-	
+
+  <node name="imu_node" pkg="mpu_6050_driver" type="imu_node.py" >
+    <param name="device" type="string" value="/dev/i2c-1"/>-->
+    <param name="address" type="int" value="104"/> --> <!-- 0x28 == 40 is the default for bno055 -->
+    <param name="frame_id" type="string" value="imu_link"/>-->
+  </node>
+
+  <node name="imu_filter_node_for_orientation" pkg="imu_complementary_filter" type="complementary_filter_node" >
+  </node>
+
+  <!--<node name="rpy_tf" pkg="mpu_6050_driver" type="tf_broadcaster_imu.py" >
+  </node>-->
+
+
   <!-- Extended Kalman Filter from robot_pose_ekf Node-->
   <!-- Subscribe: /odom, /imu_data, /vo -->
   <!-- Publish: /robot_pose_ekf/odom_combined -->
